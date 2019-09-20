@@ -1,0 +1,27 @@
+docker:
+    host: 192.168.99.100
+swagger:
+    api-version: 1.0
+credentials:
+    user: user
+    password: password
+postgres:
+    host: ${docker.host}
+    port: 5432
+    base: rabbit
+spring:
+    datasource:
+        url: jdbc:postgresql://192.168.99.100:${postgres.port}/${postgres.base}
+        driver-class-name: org.postgresql.Driver
+        username: ${credentials.user}
+        password: ${credentials.password}
+    rabbitmq:
+        addresses: 192.168.99.100
+        username: ${credentials.user}
+        password: ${credentials.password}
+jsa:
+    rabbitmq:
+        queue: jsa.queue
+        exchange: jsa.exchange.logs
+        routingkey: jsa.routingkey
+
