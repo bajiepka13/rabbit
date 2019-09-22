@@ -1,4 +1,4 @@
-package org.bajiepka.rabbit;
+package org.bajiepka.rabbit.rabbit;
 
 import org.bajiepka.rabbit.entity.Product;
 import org.springframework.amqp.core.AmqpTemplate;

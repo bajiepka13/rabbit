@@ -1,11 +1,17 @@
 package org.bajiepka.rabbit.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import org.bajiepka.rabbit.Producer;
-import org.bajiepka.rabbit.utils.RabbitUtils;
+import org.bajiepka.rabbit.rabbit.Producer;
 import org.bajiepka.rabbit.entity.Product;
 import org.bajiepka.rabbit.mappers.ProductMapper;
-import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +22,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+
+    @Autowired
+    private JobLauncher jobLauncher;
+
+    @Autowired
+    @Qualifier("csvToPostgresJob")
+    private Job job;
 
     @Autowired
     private ProductMapper products;
@@ -48,5 +61,16 @@ public class ProductController {
         Product product = new Product(name, description);
         producer.produce(product);
         return ResponseEntity.ok(product);
+    }
+
+    @RequestMapping(value = "/processCsvFile", method = RequestMethod.GET)
+    @Operation(summary = "Обрабатывает номенклатуру в файле, который находится по указанному пути", method = "GET", description = "Обрабатываем файл и сохраняем результаты в базу")
+    public ResponseEntity executeJob(@RequestParam("file") String file) throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+
+        JobParameters jobParameters = new JobParametersBuilder()
+                .addString("type", file)
+                .toJobParameters();
+        jobLauncher.run(job, jobParameters).getExitStatus().getExitCode();
+        return ResponseEntity.ok("Запущено выполнение задания по парсингу CSV файла.");
     }
 }
