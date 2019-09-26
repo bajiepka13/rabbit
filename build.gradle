@@ -22,8 +22,10 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.8.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-amqp', version: '2.1.8.RELEASE'
 
+    // https://mvnrepository.com/artifact/org.springframework/spring-oxm
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
     // https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
+    compile group: 'org.springframework', name: 'spring-oxm', version: '5.1.9.RELEASE'
     compile group: 'io.swagger.core.v3', name: 'swagger-annotations', version: '2.0.9'
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'

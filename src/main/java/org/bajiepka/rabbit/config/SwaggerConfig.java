@@ -22,12 +22,11 @@ public class SwaggerConfig {
                 .paths(PathSelectors.ant("/products/*"))
                 .build()
                 .apiInfo(retrieveApiInto());
-
     }
 
     private ApiInfo retrieveApiInto() {
         return new ApiInfo("Rabbit application",
-                "Spring Boot WebMVC + Swagger + PostgreSQL + MyBatis application",
+                "Spring Boot WebMVC + Spring Batch + Swagger + PostgreSQL + MyBatis application",
                 "1.0",
                 "http://no-terms-of-usage.really.com",
                 new Contact("Valerii C.", "www.nourl.com", "nomail@mail.ru"),
@@ -35,5 +34,4 @@ public class SwaggerConfig {
                 "nolicense.com",
                 Collections.emptyList());
     }
-
 }

@@ -1,5 +1,7 @@
 package org.bajiepka.rabbit.controller;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import org.bajiepka.rabbit.rabbit.Producer;
 import org.bajiepka.rabbit.entity.Product;
@@ -41,36 +43,57 @@ public class ProductController {
     private Product emptyProduct;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    @Operation(summary = "Find all users", method = "GET", description = "Выбрать всю номенклатуру")
+    @ApiOperation(value = "Показать всю номенклатуру", httpMethod = "GET", notes = "Выбирает все существующие записи в таблицу products")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> allProducts = products.selectAll();
         return ResponseEntity.ok(allProducts);
-
     }
 
     @RequestMapping(value = "/findByName", method = RequestMethod.GET)
-    @Operation(summary = "Find user by name", method = "GET", description = "Выбрать номенклатуру по наименованию")
-    public ResponseEntity<Product> getProductNyName(@RequestParam("name") String name) {
+    @ApiOperation(value = "Find user by name", httpMethod = "GET", notes = "Выбрать номенклатуру по наименованию")
+    public ResponseEntity<Product> getProductNyName(
+            @RequestParam("name")
+            @ApiParam(value = "Наименование номенклатуры", defaultValue = "Икра минтая") String name) {
         Product product = products.selectByName(name).orElse(emptyProduct);
         return ResponseEntity.ok(product);
     }
 
-    @RequestMapping(value = "/sendToRabit", method = RequestMethod.GET)
-    @Operation(summary = "Send Product to rabbit", method = "GET", description = "Отсылаем новый продукт в RabbitMQ")
-    public ResponseEntity<Product> sendToRabbit(@RequestParam("name") String name, @RequestParam("description") String description){
-        Product product = new Product(name, description);
+    @RequestMapping(value = "/sendToRabit", method = RequestMethod.POST)
+    @ApiOperation(value = "Send Product to rabbit", httpMethod = "POST", notes = "Отсылаем новый продукт в RabbitMQ")
+    public ResponseEntity<Product> sendToRabbit(
+            @RequestParam("name")
+            @ApiParam(value = "Наименование", defaultValue = "Кабачковая икра", type = "string")
+                    String name,
+            @RequestParam("description")
+            @ApiParam(value = "Описание", defaultValue = "Фабрика Сорокино, 250 мл", type = "string")
+                    String description,
+            @RequestParam("cost")
+            @ApiParam(value = "Цена", defaultValue = "125.00", type = "float")
+                    Double cost,
+            @RequestParam("weight")
+            @ApiParam(value = "Вес", defaultValue = "250", type = "int")
+                    Integer weight
+    ){
+        Product product = new Product(name, description, cost, weight);
         producer.produce(product);
         return ResponseEntity.ok(product);
     }
 
     @RequestMapping(value = "/processCsvFile", method = RequestMethod.GET)
-    @Operation(summary = "Обрабатывает номенклатуру в файле, который находится по указанному пути", method = "GET", description = "Обрабатываем файл и сохраняем результаты в базу")
-    public ResponseEntity executeJob(@RequestParam("file") String file) throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+    @ApiOperation(value = "Обрабатывает номенклатуру в файле, который находится по указанному пути", httpMethod = "GET", notes = "Обрабатываем файл и сохраняем результаты в базу")
+    public ResponseEntity executeJob(@RequestParam("file") @ApiParam(value = "Наименование файла", defaultValue = "import-products.csv") String file) throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
 
         JobParameters jobParameters = new JobParametersBuilder()
                 .addString("type", file)
                 .toJobParameters();
-        jobLauncher.run(job, jobParameters).getExitStatus().getExitCode();
-        return ResponseEntity.ok("Запущено выполнение задания по парсингу CSV файла.");
+        return ResponseEntity.ok(jobLauncher.run(job, jobParameters).getExitStatus().getExitCode());
     }
+
+    @RequestMapping(value = "/clearProducts", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Очистка таблицы номенклатуры", httpMethod = "DELETE", notes = "Сервисная функция для очистки таблицы.")
+    public ResponseEntity clearProducts(){
+        products.clear();
+        return ResponseEntity.ok("Очищено.");
+    }
+
 }

@@ -4,10 +4,14 @@ import org.bajiepka.rabbit.entity.Product;
 import org.springframework.batch.item.ItemProcessor;
 
 public class ProductItemProcessor implements ItemProcessor<Product, Product> {
+
     @Override
     public Product process(final Product item) throws Exception {
-        return new Product(
-                item.getName().toUpperCase(),
-                item.getDescription().toUpperCase());
+
+        return new Product(item.getName(),
+                item.getDescription().toUpperCase(),
+                item.getCost(),
+                item.getWeight());
     }
+
 }
