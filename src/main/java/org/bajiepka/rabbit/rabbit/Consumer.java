@@ -1,6 +1,6 @@
 package org.bajiepka.rabbit.rabbit;
 
-import org.bajiepka.rabbit.entity.Product;
+import org.bajiepka.rabbit.domain.Product;
 import org.bajiepka.rabbit.mappers.ProductMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;

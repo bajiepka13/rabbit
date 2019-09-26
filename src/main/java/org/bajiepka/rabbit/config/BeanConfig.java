@@ -2,7 +2,7 @@ package org.bajiepka.rabbit.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.bajiepka.rabbit.entity.Product;
+import org.bajiepka.rabbit.domain.Product;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.boot.autoconfigure.SpringBootVFS;
 import org.springframework.beans.factory.annotation.Autowired;

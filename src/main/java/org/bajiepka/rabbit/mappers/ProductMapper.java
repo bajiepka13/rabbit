@@ -1,7 +1,7 @@
 package org.bajiepka.rabbit.mappers;
 
 import org.apache.ibatis.annotations.*;
-import org.bajiepka.rabbit.entity.Product;
+import org.bajiepka.rabbit.domain.Product;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

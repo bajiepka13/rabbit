@@ -2,9 +2,8 @@ package org.bajiepka.rabbit.controller;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.v3.oas.annotations.Operation;
 import org.bajiepka.rabbit.rabbit.Producer;
-import org.bajiepka.rabbit.entity.Product;
+import org.bajiepka.rabbit.domain.Product;
 import org.bajiepka.rabbit.mappers.ProductMapper;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;

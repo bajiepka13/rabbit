@@ -1,4 +1,4 @@
-package org.bajiepka.rabbit.entity;
+package org.bajiepka.rabbit.domain;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;

@@ -1,6 +1,6 @@
 package org.bajiepka.rabbit.batch;
 
-import org.bajiepka.rabbit.entity.Product;
+import org.bajiepka.rabbit.domain.Product;
 import org.springframework.batch.item.ItemProcessor;
 
 import java.util.Random;
